@@ -1,108 +1,17 @@
+pingdirectory:
+  enabled: true
+  envs:
+    SERVER_PROFILE_URL: https://github.com/ravipathak105/pingidentity-server-profiles.git
+    SERVER_PROFILE_PATH: baseline/pingdirectory
+
 pingfederate-admin:
   enabled: true
-  image: 'pingidentity/pingfederate:12.2.0-alpine_3.21.2-al17-edge'
-    pingfederate-license:
-      items:
-        PingFederate-11.3-Development.lic: /opt/in/instance/server/default/conf/pingfederate.lic
   envs:
-    SERVER_PROFILE_URL: 'https://github.com/pingidentity/pingidentity-server-profiles.git'
+    SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
     SERVER_PROFILE_PATH: baseline/pingfederate
-    PING_IDENTITY_ACCEPT_EULA: "YES"
-  workload:
-    type: StatefulSet
-    statefulSet:
-      persistentvolume:
-        enabled: true
-        volumes:
-          out-dir:
-            mountPath: /opt/out
-            persistentVolumeClaim:
-              accessModes:
-              - ReadWriteOnce
-              storageClassName: ping-gp3
-              resources:
-                requests:
-                  storage: 4Gi
-  services:
-    https:
-      servicePort: 9999
-      containerPort: 9999
-      ingressPort: 443
-      dataService: true
-    clusterbind:
-      servicePort: 7600
-      containerPort: 7600
-      clusterService: true
-    clusterfail:
-      servicePort: 7700
-      containerPort: 7700
-      clusterService: true
-    clusterServiceName: pingfederate-cluster
-  ingress:
-    hosts:
-      - host: pingfederate-admin._defaultDomain_
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            serviceName: https
-    tls:
-      - secretName: _defaultTlsSecret_
-        hosts:
-          - pingfederate-admin._defaultDomain_
-
-
 
 pingfederate-engine:
   enabled: true
-  image: ''pingidentity/pingfederate:12.2.0-alpine_3.21.2-al17-edge''
-  secretVolumes:
-    pingfederate-license:
-      items:
-        PingFederate-11.3-Development.lic: /opt/in/instance/server/default/conf/pingfederate.lic
-  workload:
-    type: StatefulSet
-    statefulSet:
-      persistentvolume:
-        enabled: true
-        volumes:
-          out-dir:
-            mountPath: /opt/out
-            persistentVolumeClaim:
-              accessModes:
-              - ReadWriteOnce
-              storageClassName: ping-gp3
-              resources:
-                requests:
-                  storage: 4Gi
   envs:
-    SERVER_PROFILE_URL: 'https://github.com/pingidentity/pingidentity-server-profiles.git'
+    SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
     SERVER_PROFILE_PATH: baseline/pingfederate
-    PING_IDENTITY_ACCEPT_EULA: "YES"
-  services:
-    https:
-      servicePort: 9031
-      containerPort: 9031
-      ingressPort: 443
-      dataService: true
-    clusterbind:
-      servicePort: 7600
-      containerPort: 7600
-      clusterService: true
-    clusterfail:
-      servicePort: 7700
-      containerPort: 7700
-      clusterService: true
-    clusterServiceName: pingfederate-cluster
-  ingress:
-    hosts:
-      - host: pingfederate-engine._defaultDomain_
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            serviceName: https
-    tls:
-      - secretName: _defaultTlsSecret_
-        hosts:
-          - pingfederate-engine._defaultDomain_
